@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Text;
 using System.Globalization;
@@ -12,6 +13,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Numerics;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
@@ -84,7 +86,8 @@ namespace Safemoon_Stats
             //    c.Font = new Font(font_Insomnia, 9, FontStyle.Regular);
             //}
             GetIntervalPriceVolumeCap();
-
+            var currentVersion = new Version(Assembly.GetExecutingAssembly().GetName().Version.ToString());
+            this.Text += " " + currentVersion;
         }
 
         private void GetIntervalPriceVolumeCap()
@@ -173,149 +176,169 @@ namespace Safemoon_Stats
         {
             new Thread(() =>
             {
-                Var.pullWallet = true;
-
-                if (tbAddress.Text == string.Empty)
+                try
                 {
-                    MessageBox.Show("Specify wallet address", "Error");
-                    return;
-                }
-                //check auth status
-                DataTable dt = new DataTable();
-                dt.Columns.Add("Time");
-                dt.Columns.Add("Hash");
-                dt.Columns.Add("Transaction");
+                    btnPull.Enabled = false;
+                    btnPull.Text = "Retrieving data..";
+                    Var.pullWallet = true;
 
-                dt.Columns.Add("From");
-                dt.Columns.Add("To");
-
-                dt.Columns.Add("Value");
-                dt.Columns.Add("Safemoon Price");
-                dt.Columns.Add("Total Price");
-
-                long buy = 0;
-                long sell = 0;
-                string content = "";
-                string address = tbAddress.Text;
-                string url = "https://api.bscscan.com/api?module=account&action=tokentx&contractaddress=0x8076c74c5e3f5852037f31ff0093eeb8c8add8d3&address=" + address + "&page=1&offset=100&sort=asc&apikey=CKEAKUG2DTZ4N7ZFVJYM2Y9DJM7FX365WW";
-                string url_ = "https://api.bscscan.com/api?module=account&action=tokentx&contractaddress=0x8076c74c5e3f5852037f31ff0093eeb8c8add8d3&address=" + address + "&page=1&offset=100&sort=asc&apikey=CKEAKUG2DTZ4N7ZFVJYM2Y9DJM7FX365WW";
-
-
-                dynamic dynJson = GetDynamicJson(url_);
-                if (dynJson.result.ToString() == "Error! Invalid address format")
-                {
-                    MessageBox.Show("Invalid address format", "Error");
-                    return;
-                }
-
-                int count = dynJson.result.Count;
-
-                if (count == 0)
-                {
-                    MessageBox.Show("Unknown address", "Error");
-                    return;
-                }
-
-
-                foreach (var node in dynJson.result)
-                {
-                    DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeSeconds(Convert.ToInt64(node.timeStamp.ToString()));
-                    var dateTime = dateTimeOffset.DateTime;
-                    //DateTimeOffset dateTimeOffset2 = DateTimeOffset.FromUnixTimeMilliseconds(Convert.ToInt64(node.timeStamp.ToString()));
-                    string value = "";
-                    string transactionType = "";
-                    value = node.value.ToString();
-
-                    string value_final = GetCertainDecimal(value, 9);
-
-                    string from = "";
-                    string to = "";
-
-
-
-                    if (node.from == "0x9adc6fb78cefa07e13e9294f150c1e8c1dd566c0")
-                        from = "Pancake Swap";
-                    else if (node.from == "0xff3dd404afba451328de089424c74685bf0a43c9")
-                        from = "Pancake Swap (V2)";
-                    else if ((node.from).ToString().Equals(address, StringComparison.InvariantCultureIgnoreCase))
-                        from = "Wallet";
-                    else
-                        from = node.from;
-
-                    if (node.to == "0x9adc6fb78cefa07e13e9294f150c1e8c1dd566c0")
-                        to = "Pancake Swap";
-                    else if (node.to == "0xff3dd404afba451328de089424c74685bf0a43c9")
-                        to = "Pancake Swap (V2)";
-                    else if ((node.to).ToString().Equals(address, StringComparison.InvariantCultureIgnoreCase))
-                        to = "Wallet";
-                    else
-                        to = node.to;
-
-                    //buy
-                    if (node.from != address)
+                    if (tbAddress.Text == string.Empty)
                     {
-                        long buy_ = Convert.ToInt64(value_final);
-                        buy = buy + buy_;
-
-
+                        MessageBox.Show("Specify wallet address", "Error");
+                        btnPull.Enabled = true;
+                        return;
                     }
-                    else if (node.from == address)
+                    //check auth status
+                    DataTable dt = new DataTable();
+                    dt.Columns.Add("Time");
+                    dt.Columns.Add("Hash");
+                    dt.Columns.Add("Transaction");
+
+                    dt.Columns.Add("From");
+                    dt.Columns.Add("To");
+
+                    dt.Columns.Add("Safemoon value");
+                    dt.Columns.Add("Estimate Safemoon price at time of Txn");
+                    dt.Columns.Add("Estimate total price at time of Txn");
+
+                    long buy = 0;
+                    long sell = 0;
+                    string content = "";
+                    string address = tbAddress.Text;
+                    string url = "https://api.bscscan.com/api?module=account&action=tokentx&contractaddress=0x8076c74c5e3f5852037f31ff0093eeb8c8add8d3&address=" + address + "&page=1&offset=100&sort=asc&apikey=CKEAKUG2DTZ4N7ZFVJYM2Y9DJM7FX365WW";
+                    string url_ = "https://api.bscscan.com/api?module=account&action=tokentx&contractaddress=0x8076c74c5e3f5852037f31ff0093eeb8c8add8d3&address=" + address + "&page=1&offset=100&sort=asc&apikey=CKEAKUG2DTZ4N7ZFVJYM2Y9DJM7FX365WW";
+
+
+                    dynamic dynJson = GetDynamicJson(url_);
+                    if (dynJson.result.ToString() == "Error! Invalid address format")
                     {
-                        long sell_ = Convert.ToInt64(value_final);
-                        sell = sell + sell_;
+                        MessageBox.Show("Invalid address format", "Error");
+                        btnPull.Enabled = true;
+                        return;
                     }
 
-                    if (node.from != address)
-                        transactionType = "Received";
+                    int count = dynJson.result.Count;
+
+                    if (count == 0)
+                    {
+                        MessageBox.Show("Unknown address", "Error");
+                        btnPull.Enabled = true;
+                        return;
+                    }
+
+
+                    foreach (var node in dynJson.result)
+                    {
+                        DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeSeconds(Convert.ToInt64(node.timeStamp.ToString()));
+                        var dateTime = dateTimeOffset.DateTime;
+                        //DateTimeOffset dateTimeOffset2 = DateTimeOffset.FromUnixTimeMilliseconds(Convert.ToInt64(node.timeStamp.ToString()));
+                        string value = "";
+                        string transactionType = "";
+                        value = node.value.ToString();
+
+                        string value_final = GetCertainDecimal(value, 9);
+
+                        string from = "";
+                        string to = "";
+
+
+
+                        if (node.from == "0x9adc6fb78cefa07e13e9294f150c1e8c1dd566c0")
+                            from = "Pancake Swap";
+                        else if (node.from == "0xff3dd404afba451328de089424c74685bf0a43c9")
+                            from = "Pancake Swap (V2)";
+                        else if ((node.from).ToString().Equals(address, StringComparison.InvariantCultureIgnoreCase))
+                            from = "Wallet";
+                        else
+                            from = node.from;
+
+                        if (node.to == "0x9adc6fb78cefa07e13e9294f150c1e8c1dd566c0")
+                            to = "Pancake Swap";
+                        else if (node.to == "0xff3dd404afba451328de089424c74685bf0a43c9")
+                            to = "Pancake Swap (V2)";
+                        else if ((node.to).ToString().Equals(address, StringComparison.InvariantCultureIgnoreCase))
+                            to = "Wallet";
+                        else
+                            to = node.to;
+
+                        //buy
+                        if (node.from != address)
+                        {
+                            long buy_ = Convert.ToInt64(value_final);
+                            buy = buy + buy_;
+
+
+                        }
+                        else if (node.from == address)
+                        {
+                            long sell_ = Convert.ToInt64(value_final);
+                            sell = sell + sell_;
+                        }
+
+                        if (node.from != address)
+                            transactionType = "Received";
+                        else
+                            transactionType = "Sent";
+
+                        string date = JsonConvert.SerializeObject(dateTime).Replace("\"", "");
+                        date = date.Substring(0, 10);
+                        string price_ = "";
+                        price_ = GetPrice(date);
+                        double TotalPrice = Convert.ToDouble(price_) * Convert.ToDouble(value_final);
+                        string TotalPrice_ = TotalPrice.ToString();
+                        TotalPrice_ = TotalPrice.ToString("C2", CultureInfo.CreateSpecificCulture("en-US"));/*String.Format("{0:0.00}", TotalPrice);  */
+
+
+                        dt.Rows.Add(dateTimeOffset.ToString().Replace(" +00:00", ""), node.hash, transactionType, from, to, FormatValue(value_final) + " SAFEMOON", price_ + " USD", TotalPrice_ + " USD");
+                    }
+                    if (buy == 0)
+                        labelBuys.Text = "0 SAFEMOON";
                     else
-                        transactionType = "Sent";
+                        labelBuys.Text = FormatValue(buy.ToString()) + " SAFEMOON";
 
-                    string date = JsonConvert.SerializeObject(dateTime).Replace("\"", "");
-                    date = date.Substring(0, 10);
-                    string price_ = "";
-                    price_ = GetPrice(date);
-                    double TotalPrice = Convert.ToDouble(price_) * Convert.ToDouble(value_final);
-                    string TotalPrice_ = TotalPrice.ToString();
-                    TotalPrice_ = TotalPrice.ToString("C2", CultureInfo.CreateSpecificCulture("en-US"));/*String.Format("{0:0.00}", TotalPrice);  */
+                    if (sell == 0)
+                        labelSells.Text = "0 SAFEMOON";
+                    else
+                        labelSells.Text = FormatValue(sell.ToString()) + " SAFEMOON";
 
 
-                    dt.Rows.Add(dateTimeOffset.ToString().Replace(" +00:00", ""), node.hash, transactionType, from, to, FormatValue(value_final) + " SAFEMOON", price_ + " USD", TotalPrice_ + " USD");
+
+                    //balance
+                    dynamic json = GetDynamicJson("https://api.bscscan.com/api?module=account&action=tokenbalance&contractaddress=0x8076c74c5e3f5852037f31ff0093eeb8c8add8d3&address=" + address + "&tag=latest&apikey=CKEAKUG2DTZ4N7ZFVJYM2Y9DJM7FX365WW");
+                    string balance = json.result;
+                    balance = GetCertainDecimal(balance, 9);
+
+                    string price = "";
+                    price = GetPriceVolumeMarketcap();
+
+
+                    var reflection = (Convert.ToDouble(balance) + Convert.ToDouble(sell)) - Convert.ToDouble(buy);
+                    var reflectionPrice = Convert.ToDouble(price) * (Convert.ToDouble(balance) - Convert.ToDouble(buy));
+                    string reflectionPrice_ = reflectionPrice.ToString("C2", CultureInfo.CreateSpecificCulture("en-US"));
+                    var balancePrice = Convert.ToDouble(price) * (Convert.ToDouble(balance));
+                    string currentBalancePrice = balancePrice.ToString("C2", CultureInfo.CreateSpecificCulture("en-US"));
+
+
+                    labelCurrentBalance.Text = (FormatValue(balance) + " SAFEMOON (" + currentBalancePrice + " USD)").Replace("-", "");
+                    labelReflection.Text = (FormatValue(reflection.ToString()) + " SAFEMOON (" + reflectionPrice_.Replace("(","").Replace(")", "") + " USD)").Replace("-", "");
+
+                    darkDataGridView1.DataSource = dt;
+                    Var.pullWallet = false;
+                    btnPull.Enabled = true;
+                    btnPull.Text = "Pull Wallet Data";
                 }
-                labelBuys.Text = FormatValue(buy.ToString()) + " SAFEMOON";
-                if (sell == 0)
-                    labelSells.Text = "0 SAFEMOON";
-                else
-                    labelSells.Text = FormatValue(sell.ToString()) + " SAFEMOON";
-
-
-
-                //balance
-                dynamic json = GetDynamicJson("https://api.bscscan.com/api?module=account&action=tokenbalance&contractaddress=0x8076c74c5e3f5852037f31ff0093eeb8c8add8d3&address=" + address + "&tag=latest&apikey=CKEAKUG2DTZ4N7ZFVJYM2Y9DJM7FX365WW");
-                string balance = json.result;
-                balance = GetCertainDecimal(balance, 9);
-
-                string price = "";
-                price = GetPriceVolumeMarketcap();
-
-
-                var reflection = (Convert.ToDouble(balance) + Convert.ToDouble(sell)) - Convert.ToDouble(buy);
-                var reflectionPrice = Convert.ToDouble(price) * (Convert.ToDouble(balance) - Convert.ToDouble(buy));
-                string reflectionPrice_ = reflectionPrice.ToString("C2", CultureInfo.CreateSpecificCulture("en-US"));
-                var balancePrice = Convert.ToDouble(price) * (Convert.ToDouble(balance));
-                string currentBalancePrice = balancePrice.ToString("C2", CultureInfo.CreateSpecificCulture("en-US"));
-
-
-                labelCurrentBalance.Text = (FormatValue(balance) + " SAFEMOON (" + currentBalancePrice + " USD)").Replace("-", "");
-                labelReflection.Text = (FormatValue(reflection.ToString()) + " SAFEMOON (" + reflectionPrice_ + " USD)").Replace("-", "");
-
-                darkDataGridView1.DataSource = dt;
-                Var.pullWallet = false;
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                    btnPull.Enabled = true;
+                    return;
+                }
 
             }).Start();
             //var bw = new BackgroundWorker();
             //bw.DoWork += delegate {
 
-                
+
             //};
             //bw.RunWorkerCompleted += delegate {
             //};
@@ -438,8 +461,8 @@ namespace Safemoon_Stats
             labelPrice.Text = ("$" + price + " USD (" + PricecapChangePercantage + "%)");
             labelMarketcap.Text = Marketcap_ + " USD (" + MarketcapChangePercantage + "%)";
             labelVolume.Text = Volume_ + " USD (" + VolumeChangePercantage + "%)";
-            tbVolume.Text = FormatValue(Volume); ;
-            tbPrice.Text = price;
+            //tbVolume.Text = FormatValue(Volume); ;
+            //tbPrice.Text = price;
 
             return price;
         }
@@ -675,6 +698,73 @@ namespace Safemoon_Stats
             if ((e.KeyChar == '.') && ((sender as TextBox).Text.IndexOf('.') > -1))
             {
                 e.Handled = true;
+            }
+        }
+
+        private void viewToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (darkDataGridView1.SelectedCells.Count > 0)
+            {
+                string url = "";
+                int selectedrowindex = darkDataGridView1.SelectedCells[0].RowIndex;
+                DataGridViewRow selectedRow = darkDataGridView1.Rows[selectedrowindex];
+                Var.TxHash = Convert.ToString(selectedRow.Cells[1].Value);
+                url = "https://bscscan.com/tx/" + Var.TxHash;
+                //System.Diagnostics.Process.Start(url);
+                System.Diagnostics.Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+                //var info = new ProcessStartInfo(url);
+                //Process.Start(info);
+            }
+
+            //if (darkDataGridView1.GetCellCount(DataGridViewElementStates.Selected) > 0)
+            //{
+               
+
+            //    try
+            //    {
+            //        string url = "";
+            //        foreach (DataGridViewCell cell in darkDataGridView1.SelectedCells)
+            //        {
+            //            int selectedrowindex = cell.RowIndex;
+            //            DataGridViewRow selectedRow = darkDataGridView1.Rows[selectedrowindex];
+            //            Var.TxHash = Convert.ToString(selectedRow.Cells[1].Value);
+            //            url = "https://bscscan.com/tx/" + Var.TxHash;
+
+            //        }
+
+            //        System.Diagnostics.Process.Start(url);
+
+            //    }
+            //    catch (System.Runtime.InteropServices.ExternalException)
+            //    {
+
+            //        MessageBox.Show("The Clipboard could not be accessed.", "Eroor");
+            //    }
+            //}
+        }
+
+        private void copyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (darkDataGridView1.SelectedCells.Count > 0)
+            {
+                try
+                {
+                    string url = "";
+                    int selectedrowindex = darkDataGridView1.SelectedCells[0].RowIndex;
+                    DataGridViewRow selectedRow = darkDataGridView1.Rows[selectedrowindex];
+                    Var.TxHash = Convert.ToString(selectedRow.Cells[1].Value);
+                    //url = "https://bscscan.com/tx/" + Var.TxHash;
+                    ////System.Diagnostics.Process.Start(url);
+                    //System.Diagnostics.Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+                    //var info = new ProcessStartInfo(url);
+                    //Process.Start(info);
+                    MessageBox.Show("Transaction hash copied to clipboard", "Info");
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error");
+                }
+               
             }
         }
     }

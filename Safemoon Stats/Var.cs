@@ -35,5 +35,12 @@ namespace Safemoon_Stats
             get { return Marketcap_; }
             set { Marketcap_ = value; }
         }
+
+        private static string TxHash_;
+        public static string TxHash
+        {
+            get { return TxHash_; }
+            set { TxHash_ = value; }
+        }
     }
 }

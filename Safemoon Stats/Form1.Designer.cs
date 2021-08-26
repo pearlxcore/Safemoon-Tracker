@@ -44,6 +44,8 @@
             this.labelMarketcap = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.darkDataGridView1 = new DarkUI.Controls.DarkDataGridView();
+            this.darkContextMenu1 = new DarkUI.Controls.DarkContextMenu();
+            this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnPull = new DarkUI.Controls.DarkButton();
             this.flatTabControl1 = new FlatTabControl.FlatTabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -74,7 +76,9 @@
             this.tbPrice = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.darkDataGridView1)).BeginInit();
+            this.darkContextMenu1.SuspendLayout();
             this.flatTabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -262,12 +266,34 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.darkDataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.darkDataGridView1.ColumnHeadersHeight = 4;
-            this.darkDataGridView1.Location = new System.Drawing.Point(16, 216);
+            this.darkDataGridView1.ContextMenuStrip = this.darkContextMenu1;
+            this.darkDataGridView1.Location = new System.Drawing.Point(16, 224);
             this.darkDataGridView1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.darkDataGridView1.MultiSelect = false;
             this.darkDataGridView1.Name = "darkDataGridView1";
+            this.darkDataGridView1.ReadOnly = true;
             this.darkDataGridView1.RowHeadersWidth = 41;
-            this.darkDataGridView1.Size = new System.Drawing.Size(962, 187);
+            this.darkDataGridView1.Size = new System.Drawing.Size(962, 224);
             this.darkDataGridView1.TabIndex = 16;
+            // 
+            // darkContextMenu1
+            // 
+            this.darkContextMenu1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.darkContextMenu1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.darkContextMenu1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.viewToolStripMenuItem,
+            this.copyToolStripMenuItem});
+            this.darkContextMenu1.Name = "darkContextMenu1";
+            this.darkContextMenu1.Size = new System.Drawing.Size(194, 70);
+            // 
+            // viewToolStripMenuItem
+            // 
+            this.viewToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.viewToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
+            this.viewToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.viewToolStripMenuItem.Text = "View transaction detail";
+            this.viewToolStripMenuItem.Click += new System.EventHandler(this.viewToolStripMenuItem_Click);
             // 
             // btnPull
             // 
@@ -292,7 +318,7 @@
             this.flatTabControl1.myBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.flatTabControl1.Name = "flatTabControl1";
             this.flatTabControl1.SelectedIndex = 0;
-            this.flatTabControl1.Size = new System.Drawing.Size(1002, 448);
+            this.flatTabControl1.Size = new System.Drawing.Size(1002, 495);
             this.flatTabControl1.TabIndex = 18;
             // 
             // tabPage1
@@ -319,7 +345,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 25);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(994, 419);
+            this.tabPage1.Size = new System.Drawing.Size(994, 466);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Wallet Summary";
             // 
@@ -389,7 +415,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 25);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(994, 419);
+            this.tabPage2.Size = new System.Drawing.Size(994, 466);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Calculator";
             // 
@@ -399,7 +425,7 @@
             this.label19.AutoSize = true;
             this.label19.Font = new System.Drawing.Font("Segoe UI", 18F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label19.ForeColor = System.Drawing.Color.Gainsboro;
-            this.label19.Location = new System.Drawing.Point(720, 46);
+            this.label19.Location = new System.Drawing.Point(720, 70);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(236, 32);
             this.label19.TabIndex = 33;
@@ -411,7 +437,7 @@
             this.label18.AutoSize = true;
             this.label18.Font = new System.Drawing.Font("Segoe UI", 18F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label18.ForeColor = System.Drawing.Color.Gainsboro;
-            this.label18.Location = new System.Drawing.Point(247, 46);
+            this.label18.Location = new System.Drawing.Point(247, 70);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(141, 32);
             this.label18.TabIndex = 32;
@@ -421,7 +447,7 @@
             // 
             this.panel1.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Location = new System.Drawing.Point(671, 30);
+            this.panel1.Location = new System.Drawing.Point(671, 54);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1, 359);
             this.panel1.TabIndex = 31;
@@ -436,7 +462,7 @@
             0,
             0,
             65536});
-            this.darkNumericUpDown1.Location = new System.Drawing.Point(183, 273);
+            this.darkNumericUpDown1.Location = new System.Drawing.Point(183, 297);
             this.darkNumericUpDown1.Minimum = new decimal(new int[] {
             1,
             0,
@@ -456,7 +482,7 @@
             // 
             this.pictureBox1.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(824, 196);
+            this.pictureBox1.Location = new System.Drawing.Point(824, 220);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(24, 24);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -469,7 +495,7 @@
             this.label14.AutoSize = true;
             this.label14.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label14.ForeColor = System.Drawing.Color.Gainsboro;
-            this.label14.Location = new System.Drawing.Point(-14298, 301);
+            this.label14.Location = new System.Drawing.Point(-15501, 301);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(123, 20);
             this.label14.TabIndex = 26;
@@ -481,7 +507,7 @@
             this.tbTotalSafemoon.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.tbTotalSafemoon.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.tbTotalSafemoon.ForeColor = System.Drawing.Color.Gainsboro;
-            this.tbTotalSafemoon.Location = new System.Drawing.Point(183, 117);
+            this.tbTotalSafemoon.Location = new System.Drawing.Point(183, 141);
             this.tbTotalSafemoon.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.tbTotalSafemoon.Name = "tbTotalSafemoon";
             this.tbTotalSafemoon.Size = new System.Drawing.Size(266, 29);
@@ -497,7 +523,7 @@
             this.label17.AutoSize = true;
             this.label17.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label17.ForeColor = System.Drawing.Color.Gainsboro;
-            this.label17.Location = new System.Drawing.Point(707, 126);
+            this.label17.Location = new System.Drawing.Point(707, 150);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(104, 21);
             this.label17.TabIndex = 23;
@@ -509,7 +535,7 @@
             this.label15.AutoSize = true;
             this.label15.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label15.ForeColor = System.Drawing.Color.Gainsboro;
-            this.label15.Location = new System.Drawing.Point(31, 277);
+            this.label15.Location = new System.Drawing.Point(31, 301);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(55, 21);
             this.label15.TabIndex = 29;
@@ -521,7 +547,7 @@
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label9.ForeColor = System.Drawing.Color.Gainsboro;
-            this.label9.Location = new System.Drawing.Point(31, 121);
+            this.label9.Location = new System.Drawing.Point(31, 145);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(138, 21);
             this.label9.TabIndex = 3;
@@ -533,7 +559,7 @@
             this.label16.AutoSize = true;
             this.label16.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label16.ForeColor = System.Drawing.Color.Gainsboro;
-            this.label16.Location = new System.Drawing.Point(707, 233);
+            this.label16.Location = new System.Drawing.Point(707, 257);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(160, 21);
             this.label16.TabIndex = 22;
@@ -545,7 +571,7 @@
             this.tbVolume.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.tbVolume.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.tbVolume.ForeColor = System.Drawing.Color.Gainsboro;
-            this.tbVolume.Location = new System.Drawing.Point(183, 223);
+            this.tbVolume.Location = new System.Drawing.Point(183, 247);
             this.tbVolume.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.tbVolume.Name = "tbVolume";
             this.tbVolume.Size = new System.Drawing.Size(266, 29);
@@ -561,7 +587,7 @@
             this.tbAmountSafemoon.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.tbAmountSafemoon.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.tbAmountSafemoon.ForeColor = System.Drawing.Color.Gainsboro;
-            this.tbAmountSafemoon.Location = new System.Drawing.Point(711, 259);
+            this.tbAmountSafemoon.Location = new System.Drawing.Point(711, 283);
             this.tbAmountSafemoon.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.tbAmountSafemoon.Name = "tbAmountSafemoon";
             this.tbAmountSafemoon.Size = new System.Drawing.Size(252, 29);
@@ -576,7 +602,7 @@
             this.tbDailyReflection.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.tbDailyReflection.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.tbDailyReflection.ForeColor = System.Drawing.Color.Gainsboro;
-            this.tbDailyReflection.Location = new System.Drawing.Point(183, 325);
+            this.tbDailyReflection.Location = new System.Drawing.Point(183, 349);
             this.tbDailyReflection.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.tbDailyReflection.Multiline = true;
             this.tbDailyReflection.Name = "tbDailyReflection";
@@ -591,7 +617,7 @@
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label12.ForeColor = System.Drawing.Color.Gainsboro;
-            this.label12.Location = new System.Drawing.Point(31, 227);
+            this.label12.Location = new System.Drawing.Point(31, 251);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(126, 21);
             this.label12.TabIndex = 23;
@@ -603,7 +629,7 @@
             this.tbPriceInUsd.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.tbPriceInUsd.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.tbPriceInUsd.ForeColor = System.Drawing.Color.Gainsboro;
-            this.tbPriceInUsd.Location = new System.Drawing.Point(711, 152);
+            this.tbPriceInUsd.Location = new System.Drawing.Point(711, 176);
             this.tbPriceInUsd.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.tbPriceInUsd.Name = "tbPriceInUsd";
             this.tbPriceInUsd.Size = new System.Drawing.Size(252, 29);
@@ -615,7 +641,7 @@
             // btnMySafemoon
             // 
             this.btnMySafemoon.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnMySafemoon.Location = new System.Drawing.Point(455, 117);
+            this.btnMySafemoon.Location = new System.Drawing.Point(455, 141);
             this.btnMySafemoon.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnMySafemoon.Name = "btnMySafemoon";
             this.btnMySafemoon.Size = new System.Drawing.Size(177, 30);
@@ -626,7 +652,7 @@
             // GetCurrentPRICEVOLUME
             // 
             this.GetCurrentPRICEVOLUME.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.GetCurrentPRICEVOLUME.Location = new System.Drawing.Point(455, 170);
+            this.GetCurrentPRICEVOLUME.Location = new System.Drawing.Point(455, 194);
             this.GetCurrentPRICEVOLUME.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.GetCurrentPRICEVOLUME.Name = "GetCurrentPRICEVOLUME";
             this.GetCurrentPRICEVOLUME.Size = new System.Drawing.Size(177, 83);
@@ -640,7 +666,7 @@
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label13.ForeColor = System.Drawing.Color.Gainsboro;
-            this.label13.Location = new System.Drawing.Point(31, 327);
+            this.label13.Location = new System.Drawing.Point(31, 351);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(103, 21);
             this.label13.TabIndex = 21;
@@ -649,7 +675,7 @@
             // btnCalculate
             // 
             this.btnCalculate.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnCalculate.Location = new System.Drawing.Point(455, 273);
+            this.btnCalculate.Location = new System.Drawing.Point(455, 297);
             this.btnCalculate.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnCalculate.Name = "btnCalculate";
             this.btnCalculate.Size = new System.Drawing.Size(177, 29);
@@ -663,7 +689,7 @@
             this.tbPrice.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.tbPrice.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.tbPrice.ForeColor = System.Drawing.Color.Gainsboro;
-            this.tbPrice.Location = new System.Drawing.Point(183, 170);
+            this.tbPrice.Location = new System.Drawing.Point(183, 194);
             this.tbPrice.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.tbPrice.Name = "tbPrice";
             this.tbPrice.Size = new System.Drawing.Size(266, 29);
@@ -678,7 +704,7 @@
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label11.ForeColor = System.Drawing.Color.Gainsboro;
-            this.label11.Location = new System.Drawing.Point(31, 174);
+            this.label11.Location = new System.Drawing.Point(31, 198);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(101, 21);
             this.label11.TabIndex = 20;
@@ -690,17 +716,26 @@
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.Color.Gainsboro;
-            this.label3.Location = new System.Drawing.Point(253, 28);
+            this.label3.Location = new System.Drawing.Point(253, 21);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(140, 17);
             this.label3.TabIndex = 19;
             this.label3.Text = "SAFEMOON TRACKER";
             // 
+            // copyToolStripMenuItem
+            // 
+            this.copyToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.copyToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
+            this.copyToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.copyToolStripMenuItem.Text = "Copy transaction hash";
+            this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1030, 581);
+            this.ClientSize = new System.Drawing.Size(1030, 628);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.flatTabControl1);
             this.Controls.Add(this.label1);
@@ -712,6 +747,7 @@
             this.Text = "Safemoon Tracker";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.darkDataGridView1)).EndInit();
+            this.darkContextMenu1.ResumeLayout(false);
             this.flatTabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
@@ -771,6 +807,9 @@
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.Panel panel1;
+        private DarkUI.Controls.DarkContextMenu darkContextMenu1;
+        private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
     }
 }
 
