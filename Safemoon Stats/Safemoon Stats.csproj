@@ -7,7 +7,7 @@
     <ProjectGuid>{43046CF8-2808-4E6C-9171-4B73ECEBEFF7}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>Safemoon_Stats</RootNamespace>
-    <AssemblyName>Safemoon Stats</AssemblyName>
+    <AssemblyName>Safemoon Tracker</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
