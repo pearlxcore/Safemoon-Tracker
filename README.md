@@ -1,5 +1,5 @@
 # Safemoon-Tracker
 View latest safemoon stats, track past transaction, reflection calculator
 
-![image](https://user-images.githubusercontent.com/36906814/131020897-11823c45-415f-44a6-b0b3-31527d77af88.png)
-![image](https://user-images.githubusercontent.com/36906814/131020931-34210251-93e7-4ce3-95d5-72f755dda9c5.png)
+![image](https://user-images.githubusercontent.com/36906814/131021157-931077ed-1e94-4f9d-a53d-c5c2b44ec028.png)
+![image](https://user-images.githubusercontent.com/36906814/131021135-b53c0be7-a94a-4749-a424-b1d6258a8e7e.png)
