@@ -46,6 +46,7 @@
             this.darkDataGridView1 = new DarkUI.Controls.DarkDataGridView();
             this.darkContextMenu1 = new DarkUI.Controls.DarkContextMenu();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnPull = new DarkUI.Controls.DarkButton();
             this.flatTabControl1 = new FlatTabControl.FlatTabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -76,7 +77,6 @@
             this.tbPrice = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.darkDataGridView1)).BeginInit();
             this.darkContextMenu1.SuspendLayout();
             this.flatTabControl1.SuspendLayout();
@@ -267,13 +267,13 @@
             this.darkDataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.darkDataGridView1.ColumnHeadersHeight = 4;
             this.darkDataGridView1.ContextMenuStrip = this.darkContextMenu1;
-            this.darkDataGridView1.Location = new System.Drawing.Point(16, 224);
+            this.darkDataGridView1.Location = new System.Drawing.Point(16, 222);
             this.darkDataGridView1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.darkDataGridView1.MultiSelect = false;
             this.darkDataGridView1.Name = "darkDataGridView1";
             this.darkDataGridView1.ReadOnly = true;
             this.darkDataGridView1.RowHeadersWidth = 41;
-            this.darkDataGridView1.Size = new System.Drawing.Size(962, 224);
+            this.darkDataGridView1.Size = new System.Drawing.Size(962, 395);
             this.darkDataGridView1.TabIndex = 16;
             // 
             // darkContextMenu1
@@ -284,7 +284,7 @@
             this.viewToolStripMenuItem,
             this.copyToolStripMenuItem});
             this.darkContextMenu1.Name = "darkContextMenu1";
-            this.darkContextMenu1.Size = new System.Drawing.Size(194, 70);
+            this.darkContextMenu1.Size = new System.Drawing.Size(194, 48);
             // 
             // viewToolStripMenuItem
             // 
@@ -294,6 +294,15 @@
             this.viewToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
             this.viewToolStripMenuItem.Text = "View transaction detail";
             this.viewToolStripMenuItem.Click += new System.EventHandler(this.viewToolStripMenuItem_Click);
+            // 
+            // copyToolStripMenuItem
+            // 
+            this.copyToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.copyToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
+            this.copyToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.copyToolStripMenuItem.Text = "Copy transaction hash";
+            this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
             // 
             // btnPull
             // 
@@ -477,6 +486,7 @@
             0,
             0,
             0});
+            this.darkNumericUpDown1.ValueChanged += new System.EventHandler(this.darkNumericUpDown1_ValueChanged);
             // 
             // pictureBox1
             // 
@@ -495,7 +505,7 @@
             this.label14.AutoSize = true;
             this.label14.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label14.ForeColor = System.Drawing.Color.Gainsboro;
-            this.label14.Location = new System.Drawing.Point(-15501, 301);
+            this.label14.Location = new System.Drawing.Point(-21917, 301);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(123, 20);
             this.label14.TabIndex = 26;
@@ -695,6 +705,7 @@
             this.tbPrice.Size = new System.Drawing.Size(266, 29);
             this.tbPrice.TabIndex = 19;
             this.tbPrice.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbPrice.TextChanged += new System.EventHandler(this.tbPrice_TextChanged);
             this.tbPrice.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbPrice_KeyPress);
             this.tbPrice.Leave += new System.EventHandler(this.tbPrice_Leave);
             // 
@@ -721,15 +732,6 @@
             this.label3.Size = new System.Drawing.Size(140, 17);
             this.label3.TabIndex = 19;
             this.label3.Text = "SAFEMOON TRACKER";
-            // 
-            // copyToolStripMenuItem
-            // 
-            this.copyToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
-            this.copyToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
-            this.copyToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
-            this.copyToolStripMenuItem.Text = "Copy transaction hash";
-            this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
             // 
             // Form1
             // 

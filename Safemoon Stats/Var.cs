@@ -8,6 +8,13 @@ namespace Safemoon_Stats
 {
     public class Var
     {
+        private static double reflections_;
+        public static double reflections
+        {
+            get { return reflections_; }
+            set { reflections_ = value; }
+        }
+
         private static bool pullWallet_;
         public static bool pullWallet
         {

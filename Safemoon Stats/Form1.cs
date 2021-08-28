@@ -467,7 +467,38 @@ namespace Safemoon_Stats
             return price;
         }
 
+        private void CalculateReflection()
+        {
+            if (tbTotalSafemoon.Text == string.Empty || tbPrice.Text == string.Empty || tbVolume.Text == string.Empty)
+            {
+                return;
+            }
+          
 
+            UInt64 TotalSafemoon = 0;
+            double price = 0;
+            UInt64 volume = 0;
+            BigInteger totalSupply = 20000000000000000;
+            double safemoonReflection = 0;
+            BigInteger MultipliedVolumeSafemoon = 0;
+            double MultipliedVolumeSafemoon_ = 0;
+            double reflections_ = 0;
+            price = Convert.ToDouble(tbPrice.Text);
+
+            MultipliedVolumeSafemoon = BigInteger.Multiply(BigInteger.Parse(tbVolume.Text.Replace(",", "")),
+                                 BigInteger.Parse(tbTotalSafemoon.Text.Replace(",", "")));
+
+            MultipliedVolumeSafemoon_ = (double)MultipliedVolumeSafemoon;
+            Var.reflections = MultipliedVolumeSafemoon_ / 20000000000000000;
+
+
+            reflections_ = Var.reflections * Convert.ToDouble(darkNumericUpDown1.Value.ToString());
+
+            safemoonReflection = (double)reflections_ / price;
+
+
+            tbDailyReflection.Text = reflections_.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " (" + FormatValue(safemoonReflection.ToString()) + " SAFEMOON)";
+        }
 
         private void darkButton5_Click(object sender, EventArgs e)
         {
@@ -489,30 +520,7 @@ namespace Safemoon_Stats
             var bw = new BackgroundWorker();
             bw.DoWork += delegate {
 
-                UInt64 TotalSafemoon = 0;
-                double price = 0;
-                UInt64 volume = 0;
-                BigInteger totalSupply = 20000000000000000;
-                double safemoonReflection = 0;
-                double reflections = 0;
-                BigInteger MultipliedVolumeSafemoon = 0;
-                double MultipliedVolumeSafemoon_ = 0;
-
-                price = Convert.ToDouble(tbPrice.Text);
-
-                MultipliedVolumeSafemoon = BigInteger.Multiply(BigInteger.Parse(tbVolume.Text.Replace(",", "")),
-                                     BigInteger.Parse(tbTotalSafemoon.Text.Replace(",", "")));
-
-                MultipliedVolumeSafemoon_ = (double)MultipliedVolumeSafemoon;
-                reflections = MultipliedVolumeSafemoon_ / 20000000000000000;
-
-                reflections = reflections * Convert.ToDouble(darkNumericUpDown1.Value.ToString());
-
-                safemoonReflection = (double)reflections / price;
-
-
-                tbDailyReflection.Text = reflections.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " (" + FormatValue(safemoonReflection.ToString()) + " SAFEMOON)";
-
+                CalculateReflection();
             };
             bw.RunWorkerCompleted += delegate {
                 // do something with the results.
@@ -626,19 +634,48 @@ namespace Safemoon_Stats
 
         private void tbTotalSafemoon_TextChanged(object sender, EventArgs e)
         {
-            if(tbTotalSafemoon.Text != string.Empty)
+            if (tbTotalSafemoon.Text != string.Empty)
+            {
                 tbTotalSafemoon.Text = FormatValue(tbTotalSafemoon.Text);
-            tbTotalSafemoon.SelectionStart = tbTotalSafemoon.Text.Length;
-            tbTotalSafemoon.SelectionLength = 0;
+
+                tbPrice.TextChanged -= tbPriceInUsd_TextChanged;
+                tbVolume.TextChanged -= tbVolume_TextChanged;
+
+                CalculateReflection();
+
+                tbPrice.TextChanged += tbPriceInUsd_TextChanged;
+                tbVolume.TextChanged += tbVolume_TextChanged;
+
+                tbTotalSafemoon.SelectionStart = tbTotalSafemoon.Text.Length;
+                tbTotalSafemoon.SelectionLength = 0;
+            }
+            else 
+                tbDailyReflection.Text = "";
+
 
         }
 
         private void tbVolume_TextChanged(object sender, EventArgs e)
         {
             if (tbVolume.Text != string.Empty)
+            {
                 tbVolume.Text = FormatValue(tbVolume.Text);
-            tbVolume.SelectionStart = tbVolume.Text.Length;
-            tbVolume.SelectionLength = 0;
+
+                tbTotalSafemoon.TextChanged -= tbTotalSafemoon_TextChanged;
+                tbPrice.TextChanged -= tbPrice_TextChanged;
+
+                CalculateReflection();
+
+                tbTotalSafemoon.TextChanged += tbTotalSafemoon_TextChanged;
+                tbPrice.TextChanged += tbPrice_TextChanged;
+
+                tbVolume.SelectionStart = tbVolume.Text.Length;
+                tbVolume.SelectionLength = 0;
+            }
+            else
+                tbDailyReflection.Text = "";
+
+
         }
 
         private void tbPriceInUsd_KeyPress(object sender, KeyPressEventArgs e)
@@ -766,6 +803,45 @@ namespace Safemoon_Stats
                 }
                
             }
+        }
+
+        private void tbPrice_TextChanged(object sender, EventArgs e)
+        {
+            if(tbPrice.Text != string.Empty)
+            {
+
+                tbTotalSafemoon.TextChanged -= tbTotalSafemoon_TextChanged;
+                tbVolume.TextChanged -= tbVolume_TextChanged;
+
+                CalculateReflection();
+
+                tbTotalSafemoon.TextChanged += tbTotalSafemoon_TextChanged;
+                tbVolume.TextChanged += tbVolume_TextChanged;
+
+                tbPrice.SelectionStart = tbPrice.Text.Length;
+                tbPrice.SelectionLength = 0;
+            }
+            else
+                tbDailyReflection.Text = "";
+        }
+
+        private void darkNumericUpDown1_ValueChanged(object sender, EventArgs e)
+        {
+            if (tbTotalSafemoon.Text == string.Empty || tbPrice.Text == string.Empty || tbVolume.Text == string.Empty)
+            {
+                return;
+            }
+
+            double reflections_ = 0;
+            double safemoonReflection = 0;
+            double price = Convert.ToDouble(tbPrice.Text);
+
+            reflections_ = Var.reflections * Convert.ToDouble(darkNumericUpDown1.Value.ToString());
+
+            safemoonReflection = (double)reflections_ / price;
+
+
+            tbDailyReflection.Text = reflections_.ToString("C2", CultureInfo.CreateSpecificCulture("en-US")) + " (" + FormatValue(safemoonReflection.ToString()) + " SAFEMOON)";
         }
     }
 
