@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+//jangan la baca.. malu la code bersepah. xD
+
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
