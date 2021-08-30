@@ -33,7 +33,7 @@ namespace Safemoon_Stats
             CheckForIllegalCrossThreadCalls = false;
         }
 
-      
+
         private string GetCertainDecimal(string value, int length)
         {
             value = value.Substring(0, value.Length - length);
@@ -180,8 +180,9 @@ namespace Safemoon_Stats
             {
                 try
                 {
+
                     btnPull.Enabled = false;
-                    btnPull.Text = "Retrieving data..";
+                    btnPull.Text = "Retrieving..";
                     Var.pullWallet = true;
 
                     if (tbAddress.Text == string.Empty)
@@ -203,18 +204,26 @@ namespace Safemoon_Stats
                     dt.Columns.Add("Estimate Safemoon price at time of Txn");
                     dt.Columns.Add("Estimate total price at time of Txn");
 
-                    long buy = 0;
-                    long sell = 0;
+                    long TotalSafemonBuy = 0;
+                    long TotalSafemonReceived = 0;
+                    long TotalSafemonSell = 0;
+                    long TotalSafemonSent = 0;
+
+
                     string content = "";
-                    string address = tbAddress.Text;
+                    string address = tbAddress.Text.Trim();
                     string url = "https://api.bscscan.com/api?module=account&action=tokentx&contractaddress=0x8076c74c5e3f5852037f31ff0093eeb8c8add8d3&address=" + address + "&page=1&offset=100&sort=asc&apikey=CKEAKUG2DTZ4N7ZFVJYM2Y9DJM7FX365WW";
                     string url_ = "https://api.bscscan.com/api?module=account&action=tokentx&contractaddress=0x8076c74c5e3f5852037f31ff0093eeb8c8add8d3&address=" + address + "&page=1&offset=100&sort=asc&apikey=CKEAKUG2DTZ4N7ZFVJYM2Y9DJM7FX365WW";
-
-
+                    double totalBuy = 0;
+                    double totalReceived = 0;
+                    double totalSell = 0;
+                    double totalSent = 0;
                     dynamic dynJson = GetDynamicJson(url_);
                     if (dynJson.result.ToString() == "Error! Invalid address format")
                     {
                         MessageBox.Show("Invalid address format", "Error");
+                        btnPull.Text = "Pull Data";
+
                         btnPull.Enabled = true;
                         return;
                     }
@@ -225,6 +234,8 @@ namespace Safemoon_Stats
                     {
                         MessageBox.Show("Unknown address", "Error");
                         btnPull.Enabled = true;
+                        btnPull.Text = "Pull Data";
+
                         return;
                     }
 
@@ -263,23 +274,14 @@ namespace Safemoon_Stats
                         else
                             to = node.to;
 
-                        //buy
-                        if (node.from != address)
-                        {
-                            long buy_ = Convert.ToInt64(value_final);
-                            buy = buy + buy_;
 
-
-                        }
-                        else if (node.from == address)
-                        {
-                            long sell_ = Convert.ToInt64(value_final);
-                            sell = sell + sell_;
-                        }
-
-                        if (node.from != address)
-                            transactionType = "Received";
-                        else
+                        if (node.from == "0x9adc6fb78cefa07e13e9294f150c1e8c1dd566c0" || node.from == "0xff3dd404afba451328de089424c74685bf0a43c9")
+                            transactionType = "Buy";
+                        else if (node.to == "0x9adc6fb78cefa07e13e9294f150c1e8c1dd566c0" || node.to == "0xff3dd404afba451328de089424c74685bf0a43c9")
+                            transactionType = "Sell";
+                        else if (node.from != "0x9adc6fb78cefa07e13e9294f150c1e8c1dd566c0" || node.from != "0xff3dd404afba451328de089424c74685bf0a43c9")
+                            transactionType = "Receive";
+                        else if (node.to != "0x9adc6fb78cefa07e13e9294f150c1e8c1dd566c0" || node.to != "0xff3dd404afba451328de089424c74685bf0a43c9")
                             transactionType = "Sent";
 
                         string date = JsonConvert.SerializeObject(dateTime).Replace("\"", "");
@@ -290,48 +292,113 @@ namespace Safemoon_Stats
                         string TotalPrice_ = TotalPrice.ToString();
                         TotalPrice_ = TotalPrice.ToString("C2", CultureInfo.CreateSpecificCulture("en-US"));/*String.Format("{0:0.00}", TotalPrice);  */
 
+                        if (transactionType == "Buy")
+                        {
+                            totalBuy = totalBuy + TotalPrice;
+                            TotalSafemonBuy = TotalSafemonBuy + Convert.ToInt64(value_final);
+                        }
+                        if (transactionType == "Sell")
+                        {
+                            totalSell = totalSell + TotalPrice;
+                            TotalSafemonSell = TotalSafemonSell + Convert.ToInt64(value_final);
+
+                        }
+                        if (transactionType == "Receive")
+                        {
+                            totalReceived = totalReceived + TotalPrice;
+                            TotalSafemonReceived = TotalSafemonReceived + Convert.ToInt64(value_final);
+
+                        }
+                        if (transactionType == "Sent")
+                        {
+                            totalSent = totalSent + TotalPrice;
+                            TotalSafemonSent = TotalSafemonSent + Convert.ToInt64(value_final);
+
+                        }
 
                         dt.Rows.Add(dateTimeOffset.ToString().Replace(" +00:00", ""), node.hash, transactionType, from, to, FormatValue(value_final) + " SAFEMOON", price_ + " USD", TotalPrice_ + " USD");
                     }
-                    if (buy == 0)
-                        labelBuys.Text = "0 SAFEMOON";
+                    string totalBuy_ = "";
+                    string totalSell_ = "";
+                    string totalReceived_ = "";
+                    string totalSent_ = "";
+
+                    if (totalBuy != 0)
+                        totalBuy_ = totalBuy.ToString("C2", CultureInfo.CreateSpecificCulture("en-US"));
+                    if (totalReceived != 0)
+                        totalReceived_ = totalReceived.ToString("C2", CultureInfo.CreateSpecificCulture("en-US"));
+                    if (totalSell != 0)
+                        totalSell_ = totalSell.ToString("C2", CultureInfo.CreateSpecificCulture("en-US"));
+                    if (totalSent != 0)
+                        totalSent_ = totalSent.ToString("C2", CultureInfo.CreateSpecificCulture("en-US"));
+
+                    if (TotalSafemonBuy == 0)
+                        labelTotalBuy.Text = "0 SAFEMOON";
                     else
-                        labelBuys.Text = FormatValue(buy.ToString()) + " SAFEMOON";
+                        labelTotalBuy.Text = (FormatValue(TotalSafemonBuy.ToString()) + " SAFEMOON (" + totalBuy_ + " USD)").Replace("-", "");
 
-                    if (sell == 0)
-                        labelSells.Text = "0 SAFEMOON";
+                    if (TotalSafemonReceived == 0)
+                        labelTotalReceived.Text = "0 SAFEMOON";
                     else
-                        labelSells.Text = FormatValue(sell.ToString()) + " SAFEMOON";
+                        labelTotalReceived.Text = (FormatValue(TotalSafemonReceived.ToString()) + " SAFEMOON (" + totalReceived_ + " USD)").Replace("-", "");
 
+                    if (TotalSafemonSell == 0)
+                        labelTotalSell.Text = "0 SAFEMOON";
+                    else
+                        labelTotalSell.Text = (FormatValue(TotalSafemonSell.ToString()) + " SAFEMOON (" + totalSell_ + " USD)").Replace("-", "");
 
+                    if (TotalSafemonSent == 0)
+                        labelTotalSent.Text = "0 SAFEMOON";
+                    else
+                        labelTotalSent.Text = (FormatValue(TotalSafemonSent.ToString()) + " SAFEMOON (" + totalSent_ + " USD)").Replace("-", "");
 
                     //balance
                     dynamic json = GetDynamicJson("https://api.bscscan.com/api?module=account&action=tokenbalance&contractaddress=0x8076c74c5e3f5852037f31ff0093eeb8c8add8d3&address=" + address + "&tag=latest&apikey=CKEAKUG2DTZ4N7ZFVJYM2Y9DJM7FX365WW");
                     string balance = json.result;
                     balance = GetCertainDecimal(balance, 9);
 
-                    string price = "";
-                    price = GetPriceVolumeMarketcap();
+                    //string price = "";
+                    //price = GetPriceVolumeMarketcap();
+                    double sumReceiveBuy = Convert.ToDouble(TotalSafemonBuy) + Convert.ToDouble(TotalSafemonReceived);
 
-
-                    var reflection = (Convert.ToDouble(balance) + Convert.ToDouble(sell)) - Convert.ToDouble(buy);
-                    var reflectionPrice = Convert.ToDouble(price) * (Convert.ToDouble(balance) - Convert.ToDouble(buy));
+                    double sumSellSent = Convert.ToDouble(TotalSafemonSell) + Convert.ToDouble(TotalSafemonSent);
+                    var reflection = (Convert.ToDouble(balance) + sumSellSent) - sumReceiveBuy;
+                    var reflectionPrice = Convert.ToDouble(Var.Price) * reflection;
                     string reflectionPrice_ = reflectionPrice.ToString("C2", CultureInfo.CreateSpecificCulture("en-US"));
-                    var balancePrice = Convert.ToDouble(price) * (Convert.ToDouble(balance));
+                    var balancePrice = Convert.ToDouble(Var.Price) * (Convert.ToDouble(balance));
                     string currentBalancePrice = balancePrice.ToString("C2", CultureInfo.CreateSpecificCulture("en-US"));
+
+                    double RoiFiat = (Convert.ToDouble(balancePrice) / (Convert.ToDouble(totalReceived) + Convert.ToDouble(totalBuy)) * 100);
+                    double RoiToken = (Convert.ToDouble(reflection) / (Convert.ToDouble(TotalSafemonReceived) + Convert.ToDouble(TotalSafemonBuy)) * 100);
+                    if (Convert.ToDouble(balancePrice) < (Convert.ToDouble(totalReceived) + Convert.ToDouble(totalBuy)))
+                        RoiFiat = RoiFiat * -1;
+
+                    //if (Convert.ToDouble(reflection) < 0)
+                    //    RoiToken = RoiToken * -1;
+
+                    string RoiFiatString = "";
+                    RoiFiatString = String.Format("{0:0.00}", RoiFiat);
+
+
+                    string RoiTokenString = "";
+                    RoiTokenString = String.Format("{0:0.00}", RoiToken);
 
 
                     labelCurrentBalance.Text = (FormatValue(balance) + " SAFEMOON (" + currentBalancePrice + " USD)").Replace("-", "");
-                    labelReflection.Text = (FormatValue(reflection.ToString()) + " SAFEMOON (" + reflectionPrice_.Replace("(","").Replace(")", "") + " USD)").Replace("-", "");
+                    labelReflection.Text = (FormatValue(reflection.ToString()) + " SAFEMOON (" + reflectionPrice_.Replace("(", "").Replace(")", "") + " USD)").Replace("-", "");
+                    labelRoiFiat.Text = RoiFiatString + "%";
+                    labelRoiToken.Text = RoiTokenString + "%";
 
                     darkDataGridView1.DataSource = dt;
                     Var.pullWallet = false;
                     btnPull.Enabled = true;
-                    btnPull.Text = "Pull Wallet Data";
+                    btnPull.Text = "Pull Data";
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message);
+                    btnPull.Text = "Pull Data";
+
                     btnPull.Enabled = true;
                     return;
                 }
@@ -360,9 +427,9 @@ namespace Safemoon_Stats
 
             foreach (var items in json)
             {
-                
+
                 //MessageBox.Show(items.prices.ToString());
-                foreach(var price in items.prices)
+                foreach (var price in items.prices)
                 {
                     prices = price.ToString();
                     break;
@@ -475,7 +542,7 @@ namespace Safemoon_Stats
             {
                 return;
             }
-          
+
 
             UInt64 TotalSafemoon = 0;
             double price = 0;
@@ -504,7 +571,7 @@ namespace Safemoon_Stats
 
         private void darkButton5_Click(object sender, EventArgs e)
         {
-            if(tbTotalSafemoon.Text == string.Empty)
+            if (tbTotalSafemoon.Text == string.Empty)
             {
                 MessageBox.Show("Specify safemoon token", "error");
                 return;
@@ -553,7 +620,7 @@ namespace Safemoon_Stats
                 MessageBox.Show("Specify wallet address", "Error");
                 return;
             }            //balance
-           
+
 
             new Thread(() =>
             {
@@ -603,15 +670,15 @@ namespace Safemoon_Stats
 
                 double safemoon = Convert.ToDouble(tbAmountSafemoon.Text.Replace(",", ""));
                 double priceInUSD = Convert.ToDouble(Var.Price) * safemoon;
-                tbPriceInUsd.Text = Convert.ToDouble(Convert.ToDecimal(priceInUSD).ToString()).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")).Replace("$","");
+                tbPriceInUsd.Text = Convert.ToDouble(Convert.ToDecimal(priceInUSD).ToString()).ToString("C2", CultureInfo.CreateSpecificCulture("en-US")).Replace("$", "");
 
                 tbPriceInUsd.TextChanged += tbPriceInUsd_TextChanged;
                 tbAmountSafemoon.SelectionStart = tbAmountSafemoon.Text.Length;
                 tbAmountSafemoon.SelectionLength = 0;
             }
-            else if(tbAmountSafemoon.Text == "")
+            else if (tbAmountSafemoon.Text == "")
                 tbPriceInUsd.Text = "";
-               
+
         }
 
         private void tbPriceInUsd_TextChanged(object sender, EventArgs e)
@@ -651,7 +718,7 @@ namespace Safemoon_Stats
                 tbTotalSafemoon.SelectionStart = tbTotalSafemoon.Text.Length;
                 tbTotalSafemoon.SelectionLength = 0;
             }
-            else 
+            else
                 tbDailyReflection.Text = "";
 
 
@@ -757,7 +824,7 @@ namespace Safemoon_Stats
 
             //if (darkDataGridView1.GetCellCount(DataGridViewElementStates.Selected) > 0)
             //{
-               
+
 
             //    try
             //    {
@@ -799,17 +866,17 @@ namespace Safemoon_Stats
                     //Process.Start(info);
                     MessageBox.Show("Transaction hash copied to clipboard", "Info");
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message, "Error");
                 }
-               
+
             }
         }
 
         private void tbPrice_TextChanged(object sender, EventArgs e)
         {
-            if(tbPrice.Text != string.Empty)
+            if (tbPrice.Text != string.Empty)
             {
 
                 tbTotalSafemoon.TextChanged -= tbTotalSafemoon_TextChanged;
