@@ -1,3 +1,5 @@
+**THIS TOKEN IS THRASH BTW**
+
 # Safemoon-Tracker
 View latest safemoon stats, track past transaction, reflection calculator. 
 
